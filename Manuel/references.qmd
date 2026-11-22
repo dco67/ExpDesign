@@ -1,0 +1,45 @@
+---
+title: "Références"
+---
+
+## Ouvrages généraux
+
+Box, G. E. P., Hunter, J. S., & Hunter, W. G. (2005). *Statistics for Experimenters: Design, Innovation, and Discovery* (2nd ed.). Wiley.
+
+Dean, A., Voss, D., & Draguljić, D. (2017). *Design and Analysis of Experiments* (2nd ed.). Springer.
+
+Hinkelmann, K., & Kempthorne, O. (2008). *Design and Analysis of Experiments* (Vols. 1–2). Wiley.
+
+Kirk, R. E. (2013). *Experimental Design: Procedures for the Behavioral Sciences* (4th ed.). Sage.
+
+Kutner, M. H., Nachtsheim, C. J., Neter, J., & Li, W. (2005). *Applied Linear Statistical Models* (5th ed.). McGraw-Hill.
+
+Maxwell, S. E., Delaney, H. D., & Kelley, K. (2018). *Designing Experiments and Analyzing Data: A Model Comparison Perspective* (3rd ed.). Routledge.
+
+Montgomery, D. C. (2020). *Design and Analysis of Experiments* (10th ed.). Wiley.
+
+## Analyse de la variance
+
+Keppel, G., & Wickens, T. D. (2004). *Design and Analysis: A Researcher's Handbook* (4th ed.). Pearson.
+
+Rutherford, A. (2011). *ANOVA and ANCOVA: A GLM Approach* (2nd ed.). Wiley.
+
+Winer, B. J., Brown, D. R., & Michels, K. M. (1991). *Statistical Principles in Experimental Design* (3rd ed.). McGraw-Hill.
+
+## Carrés moyens attendus et quasi-\(F\)
+
+Cornfield, J., & Tukey, J. W. (1956). Average values of mean squares in factorials. *Annals of Mathematical Statistics, 27*, 907–949.
+
+Satterthwaite, F. E. (1946). An approximate distribution of estimates of variance components. *Biometrics Bulletin, 2*(6), 110–114.
+
+## Logiciels
+
+R Core Team. (2026). *R: A Language and Environment for Statistical Computing*. R Foundation for Statistical Computing, Vienna, Austria.
+
+Wickham, H., Çetinkaya-Rundel, M., & Grolemund, G. (2023). *R for Data Science* (2nd ed.). O'Reilly Media.
+
+## Lectures complémentaires
+
+Cochran, W. G., & Cox, G. M. (1992). *Experimental Designs* (2nd ed.). Wiley.
+
+Milliken, G. A., & Johnson, D. E. (2009). *Analysis of Messy Data, Volume I: Designed Experiments* (2nd ed.). Chapman & Hall/CRC.

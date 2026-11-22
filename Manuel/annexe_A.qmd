@@ -1,0 +1,668 @@
+# Annexe A — Fondements mathématiques des quasi-$F$
+
+Les chapitres précédents ont présenté les quasi-$F$ d'un point de vue essentiellement pratique. Nous avons appris à construire les espérances des carrés moyens (EMS), à déterminer le terme d'erreur approprié au moyen de la méthode de Cornfield–Tukey et, lorsque cela était nécessaire, à approximer les degrés de liberté à l'aide de la méthode de Satterthwaite.
+
+Ces procédures sont parfois perçues comme un simple ensemble de règles de calcul. En réalité, elles reposent sur un raisonnement mathématique cohérent dont l'objectif est toujours le même : construire un test de Fisher valide lorsque le plan d'expérience ne possède pas de terme d'erreur unique.
+
+Cette annexe décrit les principaux fondements de ces méthodes. Les démonstrations complètes dépassent le cadre de cet ouvrage, mais les étapes essentielles du raisonnement sont présentées afin de montrer comment les différentes méthodes s'enchaînent et pourquoi elles produisent un test valide.
+
+L'exemple numérique utilisé tout au long de cette annexe est le même que celui présenté dans l'application. Il sera ainsi possible de faire le lien entre les développements théoriques et les calculs réellement effectués lors de l'analyse d'un plan d'expérience.
+
+## A.1 Pourquoi un quasi-$F$?
+
+Dans une analyse de la variance classique, le test d'un effet repose sur un rapport de Fisher de la forme
+
+$$
+F=\frac{MS_X}{MS_E},
+$$
+
+où $MS_X$ désigne le carré moyen associé à l'effet étudié et $MS_E$ le carré moyen de l'erreur expérimentale.
+
+Sous l'hypothèse nulle, les deux carrés moyens possèdent la même espérance. Le rapport $F$ suit alors une loi de Fisher, ce qui permet de calculer une probabilité ($p$) et de prendre une décision statistique.
+
+Cette situation est illustrée par le tableau suivant.
+
+| Effet | EMS |
+|:------|:----|
+| $MS_X$ | $\phi(X)+\sigma_1^2+\sigma_2^2+\cdots$ |
+| $MS_E$ | $\sigma_1^2+\sigma_2^2+\cdots$ |
+
+Sous l'hypothèse nulle,
+
+$$
+H_0:\phi(X)=0,
+$$
+
+l'espérance du numérateur devient
+
+$$
+E(MS_X\mid H_0)
+=
+\sigma_1^2+\sigma_2^2+\cdots,
+$$
+
+c'est-à-dire exactement la même que celle du terme d'erreur.
+
+Dans les plans à effets fixes entièrement équilibrés, cette situation est généralement satisfaite : un carré moyen unique joue naturellement le rôle de terme d'erreur.
+
+La situation est différente dans les plans mixtes ou aléatoires. L'espérance du carré moyen associé à un effet contient souvent plusieurs composantes de variance, mais aucun carré moyen observé ne possède exactement cette même espérance. Il devient alors impossible d'utiliser directement un rapport de Fisher classique.
+
+Considérons, par exemple, un effet $B$ dont l'espérance est
+
+$$
+E(MS_B)
+=
+12\phi(B)
++
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+Sous l'hypothèse nulle,
+
+$$
+\phi(B)=0,
+$$
+
+et il reste
+
+$$
+E(MS_B\mid H_0)
+=
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+Le problème consiste alors à trouver, parmi tous les carrés moyens disponibles dans l'analyse de la variance, une combinaison possédant exactement cette même espérance.
+
+Lorsque cette combinaison existe sous la forme d'un seul carré moyen, on retrouve le test $F$ classique.
+
+Lorsqu'aucun carré moyen ne convient, il faut construire une **combinaison linéaire de carrés moyens**. C'est précisément le rôle de la méthode de **Cornfield–Tukey**, étudiée dans la section suivante.
+
+::: {.callout-note}
+## Idée essentielle
+
+Le problème n'est pas de trouver un nouveau test statistique.
+
+Le problème consiste à reconstruire, à partir des carrés moyens disponibles, un terme dont l'espérance est identique à celle du carré moyen de l'effet étudié lorsque $H_0$ est vraie.
+
+Toute la méthode de Cornfield–Tukey repose sur cette idée fondamentale.
+:::
+  
+## A.2 Construction du dénominateur de Cornfield–Tukey
+
+La méthode de Cornfield–Tukey répond à une question très simple :
+
+> **Existe-t-il une combinaison de carrés moyens dont l'espérance est identique à celle du carré moyen de l'effet étudié sous l'hypothèse nulle?**
+
+Pour répondre à cette question, il faut d'abord disposer des espérances des carrés moyens (EMS) de toutes les sources de variation du modèle. Ces EMS décrivent précisément les composantes de variance présentes dans chaque carré moyen.
+
+Considérons de nouveau l'effet $B$, dont l'espérance est
+
+$$
+E(MS_B)
+=
+12\phi(B)
++
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+La première étape consiste à formuler l'hypothèse nulle,
+
+$$
+H_0:\phi(B)=0.
+$$
+
+L'espérance du carré moyen devient alors
+
+$$
+E(MS_B\mid H_0)
+=
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+Autrement dit, la composante propre à l'effet $B$ disparaît et seules demeurent les composantes de variance qui doivent être reproduites par le terme d'erreur.
+
+L'objectif est donc de construire une combinaison linéaire
+
+$$
+L
+=
+c_1MS_1
++
+c_2MS_2
++\cdots+
+c_kMS_k,
+$$
+
+telle que
+
+$$
+E(L)
+=
+E(MS_B\mid H_0).
+$$
+
+Les coefficients $c_1,\ldots,c_k$ ne sont pas choisis arbitrairement. Ils doivent satisfaire simultanément toutes les égalités imposées par les EMS.
+
+Autrement dit, chaque composante de variance doit apparaître avec exactement le même coefficient des deux côtés de l'équation.
+
+Prenons un exemple simplifié.
+
+Supposons que les trois EMS disponibles soient
+
+$$
+\begin{aligned}
+E(MS_1)
+&=
+4\sigma_{Bc}^2
++
+\sigma_{Bcs(A)}^2,
+\\[0.4em]
+E(MS_2)
+&=
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2,
+\\[0.4em]
+E(MS_3)
+&=
+\sigma_{Bcs(A)}^2.
+\end{aligned}
+$$
+
+On cherche alors des coefficients $c_1$, $c_2$ et $c_3$ tels que
+
+$$
+c_1E(MS_1)
++
+c_2E(MS_2)
++
+c_3E(MS_3)
+=
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+En identifiant les coefficients de chaque composante de variance, on obtient le système
+
+$$
+\begin{aligned}
+4c_1 &=4,\\
+2c_2 &=2,\\
+c_1+c_2+c_3&=1.
+\end{aligned}
+$$
+
+Sa solution est immédiate :
+
+$$
+c_1=1,\qquad
+c_2=1,\qquad
+c_3=-1.
+$$
+
+La combinaison recherchée devient alors
+
+$$
+L
+=
+MS_1
++
+MS_2
+-
+MS_3.
+$$
+
+Cette combinaison possède exactement la même espérance que $MS_B$ sous l'hypothèse nulle.
+
+Le résultat est remarquable : les coefficients sont entièrement déterminés par la structure des EMS. Ils ne dépendent ni des données observées ni des valeurs numériques des carrés moyens. Deux chercheurs analysant le même plan d'expérience obtiendront donc exactement les mêmes coefficients de Cornfield–Tukey.
+
+Dans les plans complexes, le nombre de composantes de variance peut devenir important et le système linéaire comporte parfois plusieurs dizaines d'équations. Dans la pratique, ces calculs sont effectués automatiquement par l'application. Le principe demeure toutefois identique : les coefficients sont toujours obtenus en imposant que les deux espérances soient rigoureusement égales sous l'hypothèse nulle.
+
+::: {.callout-note}
+## Idée essentielle
+
+La méthode de Cornfield–Tukey n'utilise jamais les données observées pour déterminer les coefficients de la combinaison linéaire.
+
+Ces coefficients dépendent uniquement de la structure du plan d'expérience, telle qu'elle est décrite par les EMS. Les données observées n'interviennent qu'après cette étape, lorsque les EMS théoriques sont remplacés par les carrés moyens calculés à partir de l'échantillon.
+:::
+
+## A.3 Exemple numérique complet
+
+La section précédente a présenté le principe général de la méthode de Cornfield–Tukey. Voyons maintenant comment cette méthode est appliquée dans un cas réel.
+
+Considérons le plan d'expérience
+
+$$
+A,\;B,\;c,\;s(A),
+$$
+
+où les facteurs $A$ et $B$ sont fixes, le facteur $c$ est aléatoire et les sujets sont emboîtés dans $A$.
+
+Supposons que l'on souhaite tester l'effet principal de $B$.
+
+Les EMS du modèle montrent que
+
+$$
+E(MS_B)
+=
+12\phi(B)
++
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+Sous l'hypothèse nulle,
+
+$$
+H_0:\phi(B)=0,
+$$
+
+on obtient
+
+$$
+E(MS_B\mid H_0)
+=
+4\sigma_{Bc}^2
++
+2\sigma_{Bs(A)}^2
++
+\sigma_{Bcs(A)}^2.
+$$
+
+Le problème consiste alors à retrouver exactement ces trois composantes de variance à partir des carrés moyens disponibles dans le tableau ANOVA.
+
+L'application construit automatiquement le système linéaire associé à tous les EMS du modèle, puis recherche une combinaison de carrés moyens dont l'espérance est identique à celle de $MS_B$ sous $H_0$.
+
+Pour ce plan, les coefficients de Cornfield–Tukey obtenus sont
+
+| Carré moyen | Coefficient |
+|:------------|------------:|
+| $MS(Bc)$ | 1.000 |
+| $MS(AB)$ | 0.500 |
+| $MS(Bs(A))$ | 0.500 |
+| $MS(s(A))$ | –0.143 |
+| $MS(c)$ | –0.143 |
+| $MS(A)$ | –0.143 |
+| $MS(Ac)$ | –0.143 |
+| $MS(Bcs(A))$ | –0.143 |
+| $MS(ABc)$ | –0.143 |
+
+Ces coefficients vérifient exactement les contraintes imposées par les EMS. Ils ne sont donc pas le résultat d'une optimisation numérique ou d'un ajustement empirique : ils découlent uniquement de la structure du plan d'expérience.
+
+On remarque immédiatement que plusieurs coefficients sont négatifs.
+
+Mathématiquement, cette situation ne pose aucun problème pour égaliser les espérances des carrés moyens. En revanche, elle empêche l'utilisation directe de l'approximation de Satterthwaite, laquelle suppose que les combinaisons linéaires représentent des sommes pondérées de quantités toujours positives.
+
+La combinaison précédente est donc réécrite sous une forme équivalente.
+
+Les termes associés à des coefficients négatifs sont transférés de l'autre côté de l'équation, où ils deviennent positifs.
+
+Dans l'application, cette reformulation apparaît automatiquement à l'étape **Reconstruction** du sous-onglet **Quasi-$F$ observés**.
+
+On obtient ainsi deux combinaisons positives de carrés moyens.
+
+Le quasi-$F$ est alors construit sous la forme générale
+
+$$
+F'
+=
+\frac{
+MS(B)
++
+\displaystyle\sum_i a_iMS_i
+}{
+\displaystyle\sum_j b_jMS_j
+},
+$$
+
+où tous les coefficients $a_i$ et $b_j$ sont positifs.
+
+Cette reformulation est entièrement équivalente à la combinaison de Cornfield–Tukey originale. Elle présente toutefois un avantage fondamental : les deux combinaisons peuvent maintenant être traitées séparément par l'approximation de Satterthwaite afin d'obtenir leurs degrés de liberté effectifs.
+
+Autrement dit, la méthode de Cornfield–Tukey fournit les coefficients nécessaires à la construction du quasi-$F$, tandis que la méthode de Satterthwaite permet ensuite d'approximer la distribution de chacune des deux combinaisons obtenues.
+
+La section suivante montrera pourquoi les mêmes coefficients interviennent dans les deux méthodes.
+
+## A.4 Pourquoi les mêmes coefficients interviennent-ils dans l'approximation de Satterthwaite?
+
+À première vue, les méthodes de Cornfield–Tukey et de Satterthwaite semblent répondre à deux problèmes distincts.
+
+- La première construit un dénominateur approprié pour le test $F$.
+- La seconde approxime les degrés de liberté associés à ce dénominateur.
+
+On pourrait donc croire que chacune utilise ses propres coefficients. Il n'en est rien.
+
+Les coefficients apparaissant dans la formule de Satterthwaite sont **exactement** ceux qui ont été déterminés par la méthode de Cornfield–Tukey.
+
+Cette propriété découle directement de la logique des deux méthodes.
+
+### Les coefficients proviennent des EMS
+
+La méthode de Cornfield–Tukey construit une combinaison linéaire
+
+$$
+MS_{comb}
+=
+\sum_{i=1}^{k}
+c_iMS_i,
+$$
+
+dont l'espérance est identique à celle du carré moyen de l'effet étudié sous l'hypothèse nulle,
+
+$$
+E(MS_{comb})
+=
+E(MS_X\mid H_0).
+$$
+
+Les coefficients
+
+$$
+c_1,c_2,\ldots,c_k
+$$
+
+sont entièrement déterminés par les EMS du modèle.
+
+Ils ne dépendent ni des données observées ni des valeurs numériques des carrés moyens.
+
+Autrement dit, ils représentent exclusivement la structure théorique du plan d'expérience.
+
+### Les données remplacent ensuite les EMS
+
+Une fois cette combinaison déterminée, les espérances théoriques ne sont plus nécessaires.
+
+Dans une analyse réelle, elles sont remplacées par les carrés moyens observés,
+
+$$
+MS_{comb}
+=
+c_1MS_1
++
+c_2MS_2
++\cdots+
+c_kMS_k.
+$$
+
+La combinaison possède alors une valeur numérique pouvant être utilisée dans le calcul du quasi-$F$.
+
+Les coefficients n'ont cependant pas changé.
+
+Ils sont exactement les mêmes que ceux obtenus lors de l'égalisation des EMS.
+
+### Pourquoi Satterthwaite utilise-t-elle ces mêmes coefficients?
+
+L'approximation de Satterthwaite ne cherche pas à reconstruire les EMS.
+
+Cette étape est déjà terminée.
+
+Son objectif est beaucoup plus simple :
+
+> approximer la distribution de la combinaison linéaire de carrés moyens qui vient d'être construite.
+
+Or cette combinaison est précisément
+
+$$
+MS_{comb}
+=
+\sum_i c_iMS_i.
+$$
+
+Si les coefficients étaient modifiés à cette étape, la combinaison ne posséderait plus la même espérance que celle obtenue par Cornfield–Tukey.
+
+L'approximation porterait alors sur une quantité différente de celle utilisée dans le quasi-$F$.
+
+Les mêmes coefficients doivent donc être conservés.
+
+Ils assurent que les degrés de liberté calculés correspondent exactement à la combinaison de carrés moyens utilisée dans le test.
+
+### Une même combinaison, deux objectifs
+
+La combinaison de Cornfield–Tukey joue donc deux rôles successifs.
+
+Dans un premier temps, elle permet de reconstruire un terme dont l'espérance est correcte sous l'hypothèse nulle.
+
+Dans un second temps, cette **même combinaison** devient la variable aléatoire dont la distribution est approximée par la méthode de Satterthwaite.
+
+Les deux méthodes ne sont donc pas indépendantes.
+
+La seconde repose entièrement sur le résultat produit par la première.
+
+::: {.callout-important}
+## À retenir
+
+Les coefficients utilisés par la méthode de Satterthwaite ne sont jamais calculés directement.
+
+Ils proviennent intégralement de la méthode de Cornfield–Tukey.
+
+Cornfield–Tukey détermine **quelle combinaison de carrés moyens** doit être utilisée.
+
+Satterthwaite détermine ensuite **quels degrés de liberté** doivent être associés à cette même combinaison.
+
+Les deux méthodes constituent donc deux étapes complémentaires d'un seul et même raisonnement.
+:::
+
+
+## A.5 Pourquoi les coefficients négatifs sont-ils déplacés?
+
+La méthode de Cornfield–Tukey détermine une combinaison linéaire de carrés moyens possédant exactement la même espérance que le carré moyen de l'effet étudié sous l'hypothèse nulle. Rien, toutefois, n'impose que tous les coefficients de cette combinaison soient positifs.
+
+Il est donc fréquent d'obtenir une expression telle que
+
+$$
+MS_{comb}
+=
+MS_1
++
+0.50\,MS_2
+-
+0.25\,MS_3.
+$$
+
+Du point de vue des espérances, cette combinaison est parfaitement correcte. Les coefficients ont été déterminés de manière à reproduire exactement les composantes de variance présentes dans l'EMS de l'effet testé.
+
+Le problème apparaît lorsqu'il faut approximer la distribution de cette combinaison.
+
+### Une combinaison de carrés moyens demeure une variable aléatoire
+
+Chaque carré moyen est une estimation d'une variance. Il s'agit donc d'une quantité toujours positive dont la distribution est reliée à une loi du $\chi^2$.
+
+En revanche, une différence de carrés moyens,
+
+$$
+MS_1-MS_2,
+$$
+
+n'est plus une somme de variables positives. Selon les fluctuations de l'échantillonnage, cette quantité pourrait même devenir négative.
+
+Une telle variable ne possède plus les propriétés nécessaires à l'approximation de Satterthwaite.
+
+Autrement dit, le problème ne vient pas de Cornfield–Tukey. La combinaison obtenue est mathématiquement correcte. C'est uniquement son utilisation dans l'approximation des degrés de liberté qui devient problématique.
+
+### La reformulation de Gaylor–Hopper et Howe
+
+Pour éviter cette difficulté, les termes associés à des coefficients négatifs sont transférés de l'autre côté de l'équation.
+
+Par exemple,
+
+$$
+MS_1
++
+0.50\,MS_2
+-
+0.25\,MS_3
+=
+MS_4
+$$
+
+est réécrit sous la forme
+
+$$
+MS_1
++
+0.50\,MS_2
+=
+MS_4
++
+0.25\,MS_3.
+$$
+
+Les deux membres possèdent exactement la même espérance.
+
+En revanche, ils sont maintenant constitués uniquement de **sommes pondérées de carrés moyens**, c'est-à-dire de combinaisons dont tous les coefficients sont positifs.
+
+Le quasi-$F$ devient alors
+
+$$
+F'
+=
+\frac{
+MS_1
++
+0.50\,MS_2
+}{
+MS_4
++
+0.25\,MS_3
+}.
+$$
+
+Cette reformulation ne modifie absolument pas le test statistique. Elle ne fait que présenter la même égalité sous une forme mieux adaptée à l'approximation des degrés de liberté.
+
+### Pourquoi cette reformulation fonctionne-t-elle?
+
+Le déplacement des termes négatifs ne change pas les espérances.
+
+En effet,
+
+$$
+A-B=C
+\qquad\Longleftrightarrow\qquad
+A=B+C.
+$$
+
+Les deux écritures sont rigoureusement équivalentes.
+
+La seconde possède toutefois un avantage fondamental : chacun des deux membres est maintenant une combinaison positive de carrés moyens.
+
+Les méthodes d'approximation des degrés de liberté peuvent alors être appliquées séparément au numérateur et au dénominateur.
+
+### Conséquence pour l'approximation de Satterthwaite
+
+Une fois cette reformulation effectuée, chacune des deux combinaisons est traitée indépendamment.
+
+Les degrés de liberté effectifs du numérateur sont calculés à partir des carrés moyens qui le composent.
+
+Les degrés de liberté effectifs du dénominateur sont ensuite calculés de la même façon.
+
+Le rapport de ces deux combinaisons constitue finalement le quasi-$F$ présenté dans le tableau ANOVA.
+
+Cette étape est entièrement automatique dans l'application. Le sous-onglet **Reconstruction** montre précisément comment les coefficients négatifs sont déplacés afin d'obtenir deux combinaisons positives de carrés moyens.
+
+::: {.callout-important}
+## À retenir
+
+Les coefficients négatifs ne sont **pas supprimés**.
+
+Ils sont simplement déplacés d'un membre de l'équation à l'autre.
+
+Cette reformulation conserve exactement les mêmes espérances tout en produisant deux combinaisons positives de carrés moyens, condition indispensable à l'application de l'approximation de Satterthwaite.
+:::
+
+```{mermaid}
+flowchart TD
+
+A["Combinaison de Cornfield–Tukey<br/><br/>MS₁ + 0.50 MS₂ − 0.25 MS₃ = MS₄"]
+
+B["Déplacement des termes<br/>à coefficient négatif"]
+
+C["Numérateur<br/><br/>MS₁ + 0.50 MS₂"]
+
+D["Dénominateur<br/><br/>MS₄ + 0.25 MS₃"]
+
+E["Approximation de Satterthwaite<br/>sur chaque combinaison"]
+
+F["Quasi-F final"]
+
+A --> B
+B --> C
+B --> D
+C --> E
+D --> E
+E --> F
+```
+
+**Figure** — Transformation d'une combinaison de Cornfield–Tukey en deux combinaisons positives de carrés moyens. Les coefficients négatifs sont déplacés d'un membre de l'équation à l'autre afin de permettre l'application de l'approximation de Satterthwaite.
+
+
+```{mermaid}
+flowchart LR
+
+A["<b>Combinaison de Cornfield–Tukey</b><br/><br/>
+MS(B)<br/>
++ 0.500 MS(AB)<br/>
++ 0.500 MS(Bs(A))<br/>
+− 0.143 MS(s(A))<br/>
+− 0.143 MS(c)<br/>
+− 0.143 MS(A)<br/>
+− 0.143 MS(Ac)<br/>
+− 0.143 MS(Bcs(A))<br/>
+− 0.143 MS(ABc)"]
+
+B["Déplacement des<br/>coefficients négatifs"]
+
+C["<b>Numérateur composite</b><br/><br/>
+MS(B)<br/>
++ 0.500 MS(AB)<br/>
++ 0.500 MS(Bs(A))"]
+
+D["<b>Dénominateur composite</b><br/><br/>
+MS(s(A))<br/>
++ 0.143 MS(c)<br/>
++ 0.143 MS(A)<br/>
++ 0.143 MS(Ac)<br/>
++ 0.143 MS(Bcs(A))<br/>
++ 0.143 MS(ABc)"]
+
+E["Approximation de<br/>Satterthwaite"]
+
+F["Quasi-F"]
+
+A --> B
+B --> C
+B --> D
+C --> E
+D --> E
+E --> F
+
+style A fill:#f8f9fa,stroke:#666
+style C fill:#dbeafe,stroke:#2563eb
+style D fill:#dcfce7,stroke:#16a34a
+style E fill:#fff3cd,stroke:#b8860b
+style F fill:#f3e8ff,stroke:#7c3aed
+```
+
+**Figure A.1** — Transformation de la combinaison de Cornfield–Tukey. Les coefficients sont d'abord obtenus par égalisation des espérances des carrés moyens. Les termes associés à des coefficients négatifs sont ensuite transférés au membre opposé de l'équation afin d'obtenir deux combinaisons positives. L'approximation de Satterthwaite est appliquée séparément à chacune de ces combinaisons pour obtenir les degrés de liberté du quasi-$F$.
+
+

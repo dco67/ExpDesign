@@ -1,0 +1,72 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Plans d'expérience"
+  subtitle: "Comprendre les modèles: Une application interactive"
+  author: "Daniel Coulombe"
+  date: today
+  page-navigation: true
+  search: true
+  downloads: [pdf,epub]
+
+  chapters:
+    - index.qmd
+    - 01_introduction.qmd
+    - 02_facteurs.qmd
+    - 03_ems.qmd
+    - 04_quasif.qmd
+    - 05_simulation.qmd
+    - 06_monte_carlo.qmd
+    - annexe_A.qmd
+    - references.qmd
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    code-tools: false
+    link-external-newwindow: true
+  pdf:
+    documentclass: scrreprt
+    classoption:
+      - open=any
+    include-before-body: cover.tex
+    papersize: letter
+    geometry:
+      - top=25mm
+      - bottom=25mm
+      - left=28mm
+      - right=28mm
+    toc: true
+    number-sections: true
+    colorlinks: true
+    header-includes:
+      - \usepackage{graphicx}
+      - \usepackage{eso-pic}
+    
+  epub:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    
+  
+execute:
+  echo: false
+  warning: false
+  message: false
+  cache: true
+  freeze: auto
+
+knitr:
+  opts_chunk:
+    collapse: true    
+    fig.align: center
+    out.width: "90%"
